@@ -1,5 +1,12 @@
-﻿using System;
+﻿using FootballStats.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,15 +27,64 @@ namespace FootballStats
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly StatsContext dbContext = new StatsContext();
+
+        private EntityAssembler entityAssembler;
+        private CollectionViewSource gameViewSource;
+
         public MainWindow()
         {
             InitializeComponent();
+            gameViewSource = (CollectionViewSource)FindResource(nameof(gameViewSource));
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Checks if DB created. If not, creates it.
+            dbContext.Database.EnsureCreated();
+
+            // Loads entities into EF Core
+            dbContext.Games.Load();
+
+            // Binds to source
+            gameViewSource.Source = dbContext.Games.Local.ToObservableCollection();
+
+            // Create an entity assembler to handle data input
+            entityAssembler = new EntityAssembler(dbContext);
         }
 
         private void AddGameButton_Click(object sender, RoutedEventArgs e)
         {
-            AddGameWindow addGame = new AddGameWindow();
-            addGame.ShowDialog();
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Multiselect = true;
+            openFileDialog.Filter = "JSON files (*.json)|*.json";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                AddGameWindow addGameWindow = new AddGameWindow();
+                addGameWindow.GameNamesBox.Items.Clear();
+                addGameWindow.Show();
+                foreach (string name in openFileDialog.FileNames)
+                {
+                    using (StreamReader reader = File.OpenText(name))
+                    {
+                        JObject obj = (JObject)JToken.ReadFrom(new JsonTextReader(reader))["Spele"];
+                        entityAssembler.AssembleAndAddEntry(obj);
+                    }
+                    addGameWindow.GameNamesBox.Items.Add(name);
+                    dbContext.SaveChanges();
+                }
+            }
+        }
+
+        private void DeleteAllButton_Click(object sender, RoutedEventArgs e)
+        {
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            dbContext.Dispose();
+            base.OnClosing(e);
         }
     }
 }

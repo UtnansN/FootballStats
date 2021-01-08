@@ -5,11 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FootballStats"
         mc:Ignorable="d"
-        Title="Pievienot..." Height="400" Width="650">
+        Title="Pievienot..." Height="327.177" Width="460.026">
     <Grid>
-        <Label Content="Pievienot spēles" Margin="10,10,10,0" VerticalAlignment="Top" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Width="622" FontSize="22" FontWeight="Bold"/>
-        <ListBox Name="GameNamesBox" HorizontalAlignment="Left" Height="271" Margin="10,54,0,0" VerticalAlignment="Top" Width="622"/>
-        <Button x:Name="ChooseFilesButton" Content="Izvēlēties failus" HorizontalAlignment="Left" Height="29" Margin="490,330,0,0" VerticalAlignment="Top" Width="142" FontWeight="Bold" Click="ChooseFilesButton_Click"/>
+        <Label Content="Pievienošanas statuss" Margin="10,10,10,0" VerticalAlignment="Top" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Width="622" FontSize="22" FontWeight="Bold"/>
+        <ListBox Name="GameNamesBox" HorizontalAlignment="Left" Height="232" Margin="10,54,0,0" VerticalAlignment="Top" Width="432"/>
 
     </Grid>
 </Window>
