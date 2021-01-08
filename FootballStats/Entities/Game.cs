@@ -13,6 +13,8 @@ namespace FootballStats.Entities
         public DateTime Date { get; set; } 
         public int ViewerCount { get; set; }
         public string Place { get; set; }
+
+        public virtual ICollection<JudgeGame> Judges { get; private set; } = new ObservableCollection<JudgeGame>();
         public virtual ICollection<TeamPlay> Teams { get; private set; } = new ObservableCollection<TeamPlay>();
     }
 }

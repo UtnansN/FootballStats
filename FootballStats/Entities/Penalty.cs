@@ -6,15 +6,8 @@ using System.Threading.Tasks;
 
 namespace FootballStats.Entities
 {
-    public class Penalty
+    public class Penalty : Event
     {
         public int PenaltyID { get; set; }
-        public TimeSpan Time { get; set; }
-
-        public int PlayerId { get; set; }
-        public virtual Player Player { get; set; }
-
-        public int TeamPlayId { get; set; }
-        public virtual TeamPlay TeamPlay { get; set; }
     }
 }

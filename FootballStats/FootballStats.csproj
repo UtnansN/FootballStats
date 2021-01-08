@@ -182,9 +182,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Entities\Assist.cs" />
+    <Compile Include="Entities\Event.cs" />
+    <Compile Include="Entities\Judge.cs" />
+    <Compile Include="Entities\JudgeGame.cs" />
     <Compile Include="EntityAssembler.cs" />
     <Compile Include="Entities\TeamPlay.cs" />
-    <Compile Include="Exceptions\GameExistsException.cs" />
+    <Compile Include="Exceptions\GamePlayedException.cs" />
     <Compile Include="StatsContext.cs" />
     <Page Include="AddGameWindow.xaml">
       <SubType>Designer</SubType>

@@ -1,5 +1,7 @@
 ﻿using FootballStats.Entities;
+using FootballStats.Exceptions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -69,10 +71,38 @@ namespace FootballStats
                     using (StreamReader reader = File.OpenText(name))
                     {
                         JObject obj = (JObject)JToken.ReadFrom(new JsonTextReader(reader))["Spele"];
-                        entityAssembler.AssembleAndAddEntry(obj);
+                        try
+                        {
+                            entityAssembler.AssembleAndAddEntry(obj);
+                        }
+                        catch (GamePlayedException)
+                        {
+                            UndoChanges();
+                            continue;
+                        }
                     }
                     addGameWindow.GameNamesBox.Items.Add(name);
                     dbContext.SaveChanges();
+                }
+            }
+        }
+
+        private void UndoChanges()
+        {
+            foreach (EntityEntry entry in dbContext.ChangeTracker.Entries().ToList())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Modified:
+                        entry.State = EntityState.Unchanged;
+                        break;
+                    case EntityState.Added:
+                        entry.State = EntityState.Detached;
+                        break;
+                    case EntityState.Deleted:
+                        entry.Reload();
+                        break;
+                    default: break;
                 }
             }
         }

@@ -6,18 +6,11 @@ using System.Threading.Tasks;
 
 namespace FootballStats.Entities
 {
-    public class Swap
+    public class Swap : Event
     {
         public int SwapID { get; set; }
-        public TimeSpan Time { get; set; }
 
-        public int? FromId { get; set; }
-        public virtual Player From { get; set; }
-
-        public int ToId { get; set; }
-        public virtual Player To { get; set; }
-
-        public int TeamPlayId { get; set; }
-        public virtual TeamPlay TeamPlay { get; set; }
+        public int SwapToId { get; set; }
+        public virtual Player SwapTo { get; set; }
     }
 }

@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 
 namespace FootballStats.Entities
 {
-    public class Assist
+    public abstract class Event
     {
-        public int GoalId { get; set; }
-        public virtual Goal Goal { get; set; }
+        public TimeSpan Time { get; set; }
 
         public int PlayerId { get; set; }
         public virtual Player Player { get; set; }
 
+        public int TeamPlayId { get; set; }
+        public virtual TeamPlay TeamPlay { get; set; }
     }
 }
