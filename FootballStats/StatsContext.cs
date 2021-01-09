@@ -20,7 +20,7 @@ namespace FootballStats
         public DbSet<Player> Players { get; set; }
         public DbSet<Swap> Swaps { get; set; }
         public DbSet<Team> Teams { get; set; }
-        public DbSet<TeamPlay> TeamPlays { get; set; }
+        public DbSet<Matchup> TeamPlays { get; set; }
         public DbSet<Assist> Assists { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

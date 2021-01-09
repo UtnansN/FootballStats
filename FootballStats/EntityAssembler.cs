@@ -23,16 +23,21 @@ namespace FootballStats
 
         public void AssembleAndAddEntry(JObject gameInfo)
         {
-            Game game = new Game();
-            dbContext.Games.Add(game);
-
-            game.Date = DateTime.ParseExact((string)gameInfo["Laiks"], "yyyy/MM/dd", CultureInfo.InvariantCulture);
-            game.ViewerCount = (int)gameInfo["Skatitaji"];
-            game.Place = (string)gameInfo["Vieta"];
+            Game game = new Game
+            {
+                Date = DateTime.ParseExact((string)gameInfo["Laiks"], "yyyy/MM/dd", CultureInfo.InvariantCulture),
+                ViewerCount = (int)gameInfo["Skatitaji"],
+                Place = (string)gameInfo["Vieta"]
+            };
 
             // Link teams to game
             List<JToken> teamTokens = gameInfo["Komanda"].Children().ToList();
             if (teamTokens.Count != 2) throw new InvalidDataException();
+
+            if (teamTokens.Any(t => PlayedOnGameDate(game, t)))
+            {
+               throw new GamePlayedException("Team has already played game on this date.");
+            }
             teamTokens.ForEach(t => ProcessTeam(game, t));
 
             // Add lead judge to game
@@ -47,36 +52,21 @@ namespace FootballStats
                 entry.Game = game;
                 dbContext.JudgeGames.Add(entry);
             });
+
+            dbContext.Games.Add(game);
         }
 
-        private JudgeGame CreateJudgeEntry(JToken token, JudgeType type)
+        private bool PlayedOnGameDate(Game game, JToken token)
         {
-            string name = (string)token["Vards"];
-            string surname = (string)token["Uzvards"];
-
-            Judge judge = dbContext.Judges.Where(j => j.Name == name && j.Surname == surname).FirstOrDefault();
-            if (judge == null)
-            {
-                judge = new Judge()
-                {
-                    Name = name,
-                    Surname = surname
-                };
-                dbContext.Judges.Add(judge);
-            }
-
-            return new JudgeGame()
-            {
-                Judge = judge,
-                Type = type
-            };
+            Team team = dbContext.Teams.Local.Where(t => t.Name == (string)token["Nosaukums"]).FirstOrDefault();
+            return team != null && team.Matchups.Any(tp => tp.Game.Date == game.Date);
         }
 
         private void ProcessTeam(Game game, JToken teamToken)
         {
             string teamName = (string)teamToken["Nosaukums"];
-         
-            Team team = dbContext.Teams.Find(teamName);
+
+            Team team = dbContext.Teams.Local.Where(t => t.Name == (string)teamToken["Nosaukums"]).FirstOrDefault();
             if (team == null)
             {
                 // Create new team entry
@@ -119,16 +109,10 @@ namespace FootballStats
             }
             else
             {
-                // Checks if team has already played on date.
-                if (team.Games.Any(tp => tp.Game.Date == game.Date))
-                {
-                    throw new GamePlayedException("Team has already played game on this date.");
-                }
-
                 // TODO: Add players if there is a difference between lists?
             }
 
-            TeamPlay teamPlay = new TeamPlay
+            Matchup teamPlay = new Matchup
             {
                 Game = game,
                 Team = team
@@ -214,6 +198,29 @@ namespace FootballStats
                     teamPlay.Penalties.Add(penalty);
                 }
             }
+        }
+
+        private JudgeGame CreateJudgeEntry(JToken token, JudgeType type)
+        {
+            string name = (string)token["Vards"];
+            string surname = (string)token["Uzvards"];
+
+            Judge judge = dbContext.Judges.Where(j => j.Name == name && j.Surname == surname).FirstOrDefault();
+            if (judge == null)
+            {
+                judge = new Judge()
+                {
+                    Name = name,
+                    Surname = surname
+                };
+                dbContext.Judges.Add(judge);
+            }
+
+            return new JudgeGame()
+            {
+                Judge = judge,
+                Type = type
+            };
         }
 
         private Player GetPlayerByNumber(ICollection<Player> players, int num)

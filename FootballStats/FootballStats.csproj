@@ -186,8 +186,12 @@
     <Compile Include="Entities\Judge.cs" />
     <Compile Include="Entities\JudgeGame.cs" />
     <Compile Include="EntityAssembler.cs" />
-    <Compile Include="Entities\TeamPlay.cs" />
+    <Compile Include="Entities\Matchup.cs" />
     <Compile Include="Exceptions\GamePlayedException.cs" />
+    <Compile Include="GridModels\BestPlayersOverview.cs" />
+    <Compile Include="GridModels\TeamAveragesOverview.cs" />
+    <Compile Include="GridModels\TeamOverview.cs" />
+    <Compile Include="GridModels\ITableData.cs" />
     <Compile Include="StatsContext.cs" />
     <Page Include="AddGameWindow.xaml">
       <SubType>Designer</SubType>

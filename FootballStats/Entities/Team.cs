@@ -14,6 +14,6 @@ namespace FootballStats.Entities
         [Key]
         public string Name { get; set; }
         public virtual ICollection<Player> Players { get; private set; } = new ObservableCollection<Player>();
-        public virtual ICollection<TeamPlay> Games { get; private set; } = new ObservableCollection<TeamPlay>();
+        public virtual ICollection<Matchup> Matchups { get; private set; } = new ObservableCollection<Matchup>();
     }
 }

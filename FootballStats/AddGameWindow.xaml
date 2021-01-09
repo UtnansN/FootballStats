@@ -8,7 +8,7 @@
         Title="Pievienot..." Height="327.177" Width="460.026">
     <Grid>
         <Label Content="Pievienošanas statuss" Margin="10,10,10,0" VerticalAlignment="Top" HorizontalAlignment="Center" HorizontalContentAlignment="Center" Width="622" FontSize="22" FontWeight="Bold"/>
-        <ListBox Name="GameNamesBox" HorizontalAlignment="Left" Height="232" Margin="10,54,0,0" VerticalAlignment="Top" Width="432"/>
+        <ListBox Name="GameNamesBox" Margin="10,54,10,10"/>
 
     </Grid>
 </Window>

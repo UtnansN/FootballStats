@@ -7,23 +7,36 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="550" Width="900" Loaded="Window_Loaded">
     <Window.Resources>
-        <CollectionViewSource x:Key="gameViewSource"/>
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="TextBlock.TextAlignment" Value="Center" />
+        </Style>
     </Window.Resources>
     <Grid>
-        <Label x:Name="MainLabel" Content="Fantasy football" Height="50" Margin="10,10,10,0" HorizontalContentAlignment="Center" VerticalAlignment="Top" Width="872" FontWeight="Bold" FontSize="24" HorizontalAlignment="Center"/>
-        <Button x:Name="AddGameButton" Content="Pievienot spēles" HorizontalAlignment="Left" Height="39" Margin="10,65,0,0" VerticalAlignment="Top" Width="120" Click="AddGameButton_Click" FontWeight="Bold"/>
-        <TabControl HorizontalAlignment="Left" Height="400" Margin="10,109,0,0" VerticalAlignment="Top" Width="872">
+        <Label x:Name="MainLabel" Content="Futbola statistika" Height="50" Margin="10,10,10,0" HorizontalContentAlignment="Center" VerticalAlignment="Top" Width="872" FontWeight="Bold" FontSize="24" HorizontalAlignment="Center"/>
+        <Button x:Name="AddGameButton" Content="Pievienot spēles" HorizontalAlignment="Left" Height="26" Margin="10,65,0,0" VerticalAlignment="Top" Width="120" Click="AddGameButton_Click" FontWeight="Bold"/>
+        <TabControl Margin="10,96,10,10">
             <TabItem Header="Turnīra tabula">
                 <Grid Background="#FFE5E5E5">
-                    <DataGrid ItemsSource="{Binding Source={StaticResource gameViewSource}}" HorizontalAlignment="Left" Height="352" Margin="10,10,0,0" VerticalAlignment="Top" Width="846">
-                    </DataGrid>
+                    <DataGrid x:Name="TeamGrid" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" CanUserSortColumns="False"/>
                 </Grid>
             </TabItem>
             <TabItem Header="TOP spēlētāji">
-                <Grid Background="#FFE5E5E5"/>
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid x:Name="TopPlayerGrid" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" CanUserSortColumns="False"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="TabItem">
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid x:Name="TeamAveragesGrid" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" CanUserSortColumns="False"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="TabItem">
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid x:Name="SomeGrid2" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" CanUserSortColumns="False"/>
+                </Grid>
             </TabItem>
         </TabControl>
-        <Button x:Name="DeleteAllButton" Content="Dzēst visas spēles" HorizontalAlignment="Left" Margin="135,65,0,0" VerticalAlignment="Top" Width="105" Height="39" FontWeight="Bold" Click="DeleteAllButton_Click"/>
 
     </Grid>
 </Window>

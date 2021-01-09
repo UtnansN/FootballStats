@@ -13,7 +13,7 @@ namespace FootballStats.Entities
         public int PlayerId { get; set; }
         public virtual Player Player { get; set; }
 
-        public int TeamPlayId { get; set; }
-        public virtual TeamPlay TeamPlay { get; set; }
+        public int MatchupId { get; set; }
+        public virtual Matchup Matchup { get; set; }
     }
 }

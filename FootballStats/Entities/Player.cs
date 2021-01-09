@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,5 +24,9 @@ namespace FootballStats.Entities
 
         public string TeamId { get; set; }
         public virtual Team Team { get; set; }
+
+        public virtual ICollection<Penalty> Penalties { get; private set; } = new ObservableCollection<Penalty>();
+        public virtual ICollection<Goal> Goals { get; private set; } = new ObservableCollection<Goal>();
+        public virtual ICollection<Assist> Assists { get; private set; } = new ObservableCollection<Assist>();
     }
 }

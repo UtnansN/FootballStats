@@ -15,6 +15,6 @@ namespace FootballStats.Entities
         public string Place { get; set; }
 
         public virtual ICollection<JudgeGame> Judges { get; private set; } = new ObservableCollection<JudgeGame>();
-        public virtual ICollection<TeamPlay> Teams { get; private set; } = new ObservableCollection<TeamPlay>();
+        public virtual ICollection<Matchup> Matchups { get; private set; } = new ObservableCollection<Matchup>();
     }
 }
