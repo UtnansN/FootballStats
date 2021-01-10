@@ -11,38 +11,26 @@ using System.Windows.Data;
 
 namespace FootballStats.GridModels
 {
-    public class TeamOverview : ITableData
+    public class TeamStandingsOverview : IOverview
     {
 
-        public class Entry
-        {
-            public string TeamName { get; set; }
-            public int Points { get; set; }
-            public int BaseWins { get; set; }
-            public int BaseLosses { get; set; }
-            public int ExtendedWins { get; set; }
-            public int ExtendedLosses { get; set; }
-            public int GoalCount { get; set; }
-            public int ConcessionCount { get; set; }
-        }
-
         private readonly StatsContext dbContext;
-        public ObservableCollection<Entry> Stats = new ObservableCollection<Entry>();
+        public ObservableCollection<TeamStandingsEntry> Stats = new ObservableCollection<TeamStandingsEntry>();
 
-        public TeamOverview(StatsContext context)
+        public TeamStandingsOverview(StatsContext context)
         {
             dbContext = context;
         }
 
         public void HandleDatabaseUpdate(object sender, EventArgs e)
         {
-            List<Entry> localStats = new List<Entry>();
+            List<TeamStandingsEntry> localStats = new List<TeamStandingsEntry>();
             foreach (Team team in dbContext.Teams)
             {
                 List<Matchup> plays = dbContext.TeamPlays.Where(tp => tp.Team == team).ToList();
                 List<Matchup> opponentPlays = plays.Select(tp => tp.OpponentMatchup).ToList();
 
-                Entry curr = new Entry()
+                TeamStandingsEntry curr = new TeamStandingsEntry()
                 {
                     TeamName = team.Name,
                     GoalCount = plays.Sum(tp => tp.Goals.Count),
@@ -83,8 +71,6 @@ namespace FootballStats.GridModels
             Stats.Clear();
             localStats.OrderByDescending(en => en.Points).ToList().ForEach(Stats.Add);
         }
-
-
     }
 
 

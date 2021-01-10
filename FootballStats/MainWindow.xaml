@@ -18,22 +18,62 @@
         <TabControl Margin="10,96,10,10">
             <TabItem Header="Turnīra tabula">
                 <Grid Background="#FFE5E5E5">
-                    <DataGrid x:Name="TeamGrid" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" CanUserSortColumns="False"/>
+                    <DataGrid x:Name="TeamGrid" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" CanUserSortColumns="False" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding TeamName}" Header="Komanda"/>
+                            <DataGridTextColumn Binding="{Binding Points}" Header="Punkti"/>
+                            <DataGridTextColumn Binding="{Binding BaseWins}" Header="Uzv. pamat."/>
+                            <DataGridTextColumn Binding="{Binding BaseLosses}" Header="Zaud. pamat."/>
+                            <DataGridTextColumn Binding="{Binding ExtendedWins}" Header="Uzv. papild."/>
+                            <DataGridTextColumn Binding="{Binding ExtendedLosses}" Header="Zaud. papild."/>
+                            <DataGridTextColumn Binding="{Binding GoalCount}" Header="Ieg. vārti"/>
+                            <DataGridTextColumn Binding="{Binding ConcessionCount}" Header="Zaud. vārti"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Grid>
             </TabItem>
-            <TabItem Header="TOP spēlētāji">
+            <TabItem Header="TOP 10 spēlētāji">
                 <Grid Background="#FFE5E5E5">
-                    <DataGrid x:Name="TopPlayerGrid" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" CanUserSortColumns="False"/>
+                    <DataGrid x:Name="TopPlayerGrid" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" CanUserSortColumns="False" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Name}" Header="Vārds"/>
+                            <DataGridTextColumn Binding="{Binding Surname}" Header="Uzvārds"/>
+                            <DataGridTextColumn Binding="{Binding Team}" Header="Komanda"/>
+                            <DataGridTextColumn Binding="{Binding Number}" Header="Nr."/>
+                            <DataGridTextColumn Binding="{Binding GoalCount}" Header="Vārti"/>
+                            <DataGridTextColumn Binding="{Binding AssistCount}" Header="Rezultatīvas piespēles"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Komandu vidējie rādītāji">
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid x:Name="TeamAveragesGrid" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" CanUserSortColumns="False" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Team}" Header="Komanda"/>
+                            <DataGridTextColumn Binding="{Binding AverageGoals}" Header="Vid. vārti"/>
+                            <DataGridTextColumn Binding="{Binding MostGoals}" Header="Maks. vārti"/>
+                            <DataGridTextColumn Binding="{Binding AverageConcessions}" Header="Vid. ielaisti vārti"/>
+                            <DataGridTextColumn Binding="{Binding MostConcessions}" Header="Maks. ielaisti vārti"/>
+                            <DataGridTextColumn Binding="{Binding AverageSwaps}" Header="Vid. maiņas"/>
+                            <DataGridTextColumn Binding="{Binding AveragePenalties}" Header="Vid. sodi"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Grid>
             </TabItem>
             <TabItem Header="TabItem">
                 <Grid Background="#FFE5E5E5">
-                    <DataGrid x:Name="TeamAveragesGrid" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" CanUserSortColumns="False"/>
-                </Grid>
-            </TabItem>
-            <TabItem Header="TabItem">
-                <Grid Background="#FFE5E5E5">
-                    <DataGrid x:Name="SomeGrid2" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" CanUserSortColumns="False"/>
+                    <DataGrid x:Name="SomeGrid2" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" CanUserSortColumns="False" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Team}" Header="Komanda"/>
+                            <DataGridTextColumn Binding="{Binding AverageGoals}" Header="Vid. vārti"/>
+                            <DataGridTextColumn Binding="{Binding MostGoals}" Header="Maks. vārti"/>
+                            <DataGridTextColumn Binding="{Binding AverageConcessions}" Header="Vid. ielaisti vārti"/>
+                            <DataGridTextColumn Binding="{Binding MostConcessions}" Header="Maks. ielaisti vārti"/>
+                            <DataGridTextColumn Binding="{Binding AverageSwaps}" Header="Vid. maiņas"/>
+                            <DataGridTextColumn Binding="{Binding AveragePenalties}" Header="Vid. sodi"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Grid>
             </TabItem>
         </TabControl>

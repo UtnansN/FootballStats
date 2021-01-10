@@ -188,10 +188,13 @@
     <Compile Include="EntityAssembler.cs" />
     <Compile Include="Entities\Matchup.cs" />
     <Compile Include="Exceptions\GamePlayedException.cs" />
+    <Compile Include="GridModels\Entry\BestPlayersEntry.cs" />
     <Compile Include="GridModels\BestPlayersOverview.cs" />
+    <Compile Include="GridModels\Entry\TeamAveragesEntry.cs" />
     <Compile Include="GridModels\TeamAveragesOverview.cs" />
-    <Compile Include="GridModels\TeamOverview.cs" />
-    <Compile Include="GridModels\ITableData.cs" />
+    <Compile Include="GridModels\IOverview.cs" />
+    <Compile Include="GridModels\Entry\TeamStandingsEntry.cs" />
+    <Compile Include="GridModels\TeamStandingsOverview.cs" />
     <Compile Include="StatsContext.cs" />
     <Page Include="AddGameWindow.xaml">
       <SubType>Designer</SubType>

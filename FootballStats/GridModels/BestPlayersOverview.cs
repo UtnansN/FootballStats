@@ -8,21 +8,12 @@ using System.Threading.Tasks;
 
 namespace FootballStats.GridModels
 {
-    public class BestPlayersOverview : ITableData
+    public class BestPlayersOverview : IOverview
     {
-        public class Entry
-        {
-            public string Name { get; set; }
-            public string Surname { get; set; }
-            public string Team { get; set; }
-            public int Number { get; set; }
-            public int GoalCount { get; set; }
-            public int AssistCount { get; set; }
-        }
 
         private readonly StatsContext dbContext;
         private int topCount = 10;
-        public ObservableCollection<Entry> Stats = new ObservableCollection<Entry>();
+        public ObservableCollection<BestPlayersEntry> Stats = new ObservableCollection<BestPlayersEntry>();
 
         public BestPlayersOverview(StatsContext context)
         {
@@ -31,7 +22,7 @@ namespace FootballStats.GridModels
 
         public void HandleDatabaseUpdate(object sender, EventArgs e)
         {
-            List<Entry> localStats = new List<Entry>();
+            List<BestPlayersEntry> localStats = new List<BestPlayersEntry>();
 
             List<Player> players = dbContext.Players
                 .OrderByDescending(p => p.Goals.Count)
@@ -41,7 +32,7 @@ namespace FootballStats.GridModels
 
             foreach (var player in players)
             {
-                localStats.Add(new Entry()
+                localStats.Add(new BestPlayersEntry()
                 {
                     Name = player.Name,
                     Surname = player.Surname,

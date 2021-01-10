@@ -28,7 +28,6 @@ namespace FootballStats
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-
     public partial class MainWindow : Window
     {
         private readonly StatsContext dbContext = new StatsContext();
@@ -47,24 +46,22 @@ namespace FootballStats
             // Checks if DB created. If not, creates it.
             dbContext.Database.EnsureCreated();
 
+            // Following section could technically be done with interfaces and methods that use them
+
             // Views for table
-            TeamOverview teamOverview = new TeamOverview(dbContext);
+            TeamStandingsOverview teamOverview = new TeamStandingsOverview(dbContext);
             BestPlayersOverview bestPlayersOverview = new BestPlayersOverview(dbContext);
             TeamAveragesOverview teamAveragesOverview = new TeamAveragesOverview(dbContext);
-
-            // Adding event subscribers
-            DatabaseChange += teamOverview.HandleDatabaseUpdate;
-            DatabaseChange += bestPlayersOverview.HandleDatabaseUpdate;
-            DatabaseChange += teamAveragesOverview.HandleDatabaseUpdate;
-
-            // Loads entities into EF Core
-            dbContext.Games.Load();
-            dbContext.Teams.Load();
 
             // Binds items to item source
             TeamGrid.ItemsSource = teamOverview.Stats;
             TopPlayerGrid.ItemsSource = bestPlayersOverview.Stats;
             TeamAveragesGrid.ItemsSource = teamAveragesOverview.Stats;
+
+            // Add event handlers.
+            DatabaseChange += teamOverview.HandleDatabaseUpdate;
+            DatabaseChange += bestPlayersOverview.HandleDatabaseUpdate;
+            DatabaseChange += teamAveragesOverview.HandleDatabaseUpdate;
 
             // Invoke initial data loading
             OnDatabaseChange(EventArgs.Empty);
@@ -99,38 +96,18 @@ namespace FootballStats
                         }
                         catch (GamePlayedException)
                         {
-                            addGameWindow.GameNamesBox.Items.Add(name + " NOT OK");
+                            addGameWindow.GameNamesBox.Items.Add(name + " NEPIEVIENOTS");
                             continue;
                         }
                     }
 
                     existChanges = true;
-                    addGameWindow.GameNamesBox.Items.Add(name + " OK");
+                    addGameWindow.GameNamesBox.Items.Add(name + " PIEVIENOTS");
                 }
                 if (existChanges)
                 {
                     dbContext.SaveChanges();
                     OnDatabaseChange(EventArgs.Empty);
-                }
-            }
-        }
-
-        private void UndoChanges()
-        {
-            foreach (EntityEntry entry in dbContext.ChangeTracker.Entries().ToList())
-            {
-                switch (entry.State)
-                {
-                    case EntityState.Modified:
-                        entry.State = EntityState.Unchanged;
-                        break;
-                    case EntityState.Added:
-                        entry.State = EntityState.Detached;
-                        break;
-                    case EntityState.Deleted:
-                        entry.Reload();
-                        break;
-                    default: break;
                 }
             }
         }

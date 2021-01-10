@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FootballStats.GridModels
 {
-    public interface ITableData
+    public interface IOverview
     {
         void HandleDatabaseUpdate(object sender, EventArgs e);
     }
