@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FootballStats"
         mc:Ignorable="d"
-        Title="MainWindow" Height="550" Width="900" Loaded="Window_Loaded">
+        Title="Futbola statistika" Height="550" Width="900" Loaded="Window_Loaded">
     <Window.Resources>
         <Style TargetType="DataGridColumnHeader">
             <Setter Property="HorizontalAlignment" Value="Stretch" />
@@ -18,8 +18,9 @@
         <TabControl Margin="10,96,10,10">
             <TabItem Header="Turnīra tabula">
                 <Grid Background="#FFE5E5E5">
-                    <DataGrid x:Name="TeamGrid" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" CanUserSortColumns="False" AutoGenerateColumns="False">
+                    <DataGrid x:Name="TeamGrid" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" AutoGenerateColumns="False" ClipboardCopyMode="IncludeHeader">
                         <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Place}" Header="V.p.k."/>
                             <DataGridTextColumn Binding="{Binding TeamName}" Header="Komanda"/>
                             <DataGridTextColumn Binding="{Binding Points}" Header="Punkti"/>
                             <DataGridTextColumn Binding="{Binding BaseWins}" Header="Uzv. pamat."/>
@@ -34,44 +35,65 @@
             </TabItem>
             <TabItem Header="TOP 10 spēlētāji">
                 <Grid Background="#FFE5E5E5">
-                    <DataGrid x:Name="TopPlayerGrid" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" CanUserSortColumns="False" AutoGenerateColumns="False">
+                    <DataGrid x:Name="TopPlayerGrid" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" AutoGenerateColumns="False" ClipboardCopyMode="IncludeHeader">
                         <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Place}" Header="V.p.k."/>
                             <DataGridTextColumn Binding="{Binding Name}" Header="Vārds"/>
                             <DataGridTextColumn Binding="{Binding Surname}" Header="Uzvārds"/>
                             <DataGridTextColumn Binding="{Binding Team}" Header="Komanda"/>
                             <DataGridTextColumn Binding="{Binding Number}" Header="Nr."/>
                             <DataGridTextColumn Binding="{Binding GoalCount}" Header="Vārti"/>
-                            <DataGridTextColumn Binding="{Binding AssistCount}" Header="Rezultatīvas piespēles"/>
+                            <DataGridTextColumn Binding="{Binding AssistCount}" Header="Rez. piespēles"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
             </TabItem>
             <TabItem Header="Komandu vidējie rādītāji">
                 <Grid Background="#FFE5E5E5">
-                    <DataGrid x:Name="TeamAveragesGrid" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" CanUserSortColumns="False" AutoGenerateColumns="False">
+                    <DataGrid x:Name="TeamAveragesGrid" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" AutoGenerateColumns="False" ClipboardCopyMode="IncludeHeader">
                         <DataGrid.Columns>
                             <DataGridTextColumn Binding="{Binding Team}" Header="Komanda"/>
-                            <DataGridTextColumn Binding="{Binding AverageGoals}" Header="Vid. vārti"/>
-                            <DataGridTextColumn Binding="{Binding MostGoals}" Header="Maks. vārti"/>
+                            <DataGridTextColumn Binding="{Binding RegularGoals}" Header="Parasti vārti"/>
+                            <DataGridTextColumn Binding="{Binding PenaltyGoals}" Header="Soda vārti"/>
+                            <DataGridTextColumn Binding="{Binding AverageGoals}" Header="Vid. iesisti vārti"/>
+                            <DataGridTextColumn Binding="{Binding MostGoalsInAGame}" Header="Visv. vārti spēlē"/>
                             <DataGridTextColumn Binding="{Binding AverageConcessions}" Header="Vid. ielaisti vārti"/>
-                            <DataGridTextColumn Binding="{Binding MostConcessions}" Header="Maks. ielaisti vārti"/>
                             <DataGridTextColumn Binding="{Binding AverageSwaps}" Header="Vid. maiņas"/>
                             <DataGridTextColumn Binding="{Binding AveragePenalties}" Header="Vid. sodi"/>
+                            <DataGridTextColumn Binding="{Binding LongestGame}" Header="Garākā spēle"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
             </TabItem>
-            <TabItem Header="TabItem">
+            <TabItem Header="Populārākās spēles">
                 <Grid Background="#FFE5E5E5">
-                    <DataGrid x:Name="SomeGrid2" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" CanUserSortColumns="False" AutoGenerateColumns="False">
+                    <DataGrid x:Name="PopularGameGrid" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" AutoGenerateColumns="False" ClipboardCopyMode="IncludeHeader">
                         <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Place}" Header="V.p.k."/>
+                            <DataGridTextColumn Binding="{Binding Viewers}" Header="Skatītāji"/>
+                            <DataGridTextColumn Binding="{Binding Date}" Header="Datums"/>
+                            <DataGridTextColumn Binding="{Binding T1}" Header="T1"/>
+                            <DataGridTextColumn Binding="{Binding T2}" Header="T2"/>
+                            <DataGridTextColumn Binding="{Binding FinalResults}" Header="Rezultāts"/>
+                            <DataGridTextColumn Binding="{Binding FirstHalfResults}" Header="1. Pusl. Rezultāts"/>
+                            <DataGridTextColumn Binding="{Binding GameLength}" Header="Ilgums"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Labākie uzbrucēji">
+                <Grid Background="#FFE5E5E5">
+                    <DataGrid x:Name="BestAttackerGrid" ColumnWidth="*" Margin="10" IsReadOnly="True" CanUserAddRows="False" Grid.RowSpan="2" Grid.ColumnSpan="2" AutoGenerateColumns="False" ClipboardCopyMode="IncludeHeader">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Place}" Header="V.p.k."/>
+                            <DataGridTextColumn Binding="{Binding Name}" Header="Vārds"/>
+                            <DataGridTextColumn Binding="{Binding Surname}" Header="Uzvārds"/>
                             <DataGridTextColumn Binding="{Binding Team}" Header="Komanda"/>
-                            <DataGridTextColumn Binding="{Binding AverageGoals}" Header="Vid. vārti"/>
-                            <DataGridTextColumn Binding="{Binding MostGoals}" Header="Maks. vārti"/>
-                            <DataGridTextColumn Binding="{Binding AverageConcessions}" Header="Vid. ielaisti vārti"/>
-                            <DataGridTextColumn Binding="{Binding MostConcessions}" Header="Maks. ielaisti vārti"/>
-                            <DataGridTextColumn Binding="{Binding AverageSwaps}" Header="Vid. maiņas"/>
-                            <DataGridTextColumn Binding="{Binding AveragePenalties}" Header="Vid. sodi"/>
+                            <DataGridTextColumn Binding="{Binding GamesPlayed}" Header="Spēles"/>
+                            <DataGridTextColumn Binding="{Binding Goals}" Header="Vārti"/>
+                            <DataGridTextColumn Binding="{Binding Assists}" Header="Piespēles"/>
+                            <DataGridTextColumn Binding="{Binding YellowCards}" Header="Dz. kartītes"/>
+                            <DataGridTextColumn Binding="{Binding RedCards}" Header="Sark. kartītes"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>

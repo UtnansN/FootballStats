@@ -69,9 +69,13 @@ namespace FootballStats.GridModels
             }
 
             Stats.Clear();
-            localStats.OrderByDescending(en => en.Points).ToList().ForEach(Stats.Add);
+            localStats = localStats.OrderByDescending(en => en.Points).ToList();
+
+            for (int i = 0; i < localStats.Count; i++)
+            {
+                localStats[i].Place = i + 1;
+                Stats.Add(localStats[i]);
+            }
         }
     }
-
-
 }

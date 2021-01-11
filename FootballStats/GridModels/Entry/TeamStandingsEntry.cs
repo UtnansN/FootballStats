@@ -4,6 +4,7 @@ namespace FootballStats.GridModels
 {
     public class TeamStandingsEntry
     {
+        public int Place { get; set; }
         public string TeamName { get; set; }
         public int Points { get; set; }
         public int BaseWins { get; set; }

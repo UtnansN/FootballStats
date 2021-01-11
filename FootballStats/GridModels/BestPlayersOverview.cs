@@ -44,7 +44,11 @@ namespace FootballStats.GridModels
             }
 
             Stats.Clear();
-            localStats.ForEach(Stats.Add);
+            for (int i = 0; i < localStats.Count; i++)
+            {
+                localStats[i].Place = i + 1;
+                Stats.Add(localStats[i]);
+            }
         }
     }
 }

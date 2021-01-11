@@ -1,27 +1,14 @@
-﻿using FootballStats.Entities;
-using FootballStats.Exceptions;
+﻿using FootballStats.Exceptions;
 using FootballStats.GridModels;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace FootballStats
 {
@@ -46,22 +33,29 @@ namespace FootballStats
             // Checks if DB created. If not, creates it.
             dbContext.Database.EnsureCreated();
 
-            // Following section could technically be done with interfaces and methods that use them
+            // Following section could probably be done with interfaces and methods that use them
+            // But for sake of time I chose to do this part manually.
 
             // Views for table
             TeamStandingsOverview teamOverview = new TeamStandingsOverview(dbContext);
             BestPlayersOverview bestPlayersOverview = new BestPlayersOverview(dbContext);
             TeamAveragesOverview teamAveragesOverview = new TeamAveragesOverview(dbContext);
+            GameOverview gameOverview = new GameOverview(dbContext);
+            BestAttackerOverview attackerOverview = new BestAttackerOverview(dbContext);
 
             // Binds items to item source
             TeamGrid.ItemsSource = teamOverview.Stats;
             TopPlayerGrid.ItemsSource = bestPlayersOverview.Stats;
             TeamAveragesGrid.ItemsSource = teamAveragesOverview.Stats;
+            PopularGameGrid.ItemsSource = gameOverview.Stats;
+            BestAttackerGrid.ItemsSource = attackerOverview.Stats;
 
             // Add event handlers.
             DatabaseChange += teamOverview.HandleDatabaseUpdate;
             DatabaseChange += bestPlayersOverview.HandleDatabaseUpdate;
             DatabaseChange += teamAveragesOverview.HandleDatabaseUpdate;
+            DatabaseChange += gameOverview.HandleDatabaseUpdate;
+            DatabaseChange += attackerOverview.HandleDatabaseUpdate;
 
             // Invoke initial data loading
             OnDatabaseChange(EventArgs.Empty);
@@ -81,10 +75,10 @@ namespace FootballStats
             if (openFileDialog.ShowDialog() == true)
             {
                 AddGameWindow addGameWindow = new AddGameWindow();
-                addGameWindow.GameNamesBox.Items.Clear();
                 addGameWindow.Show();
 
                 bool existChanges = false;
+
                 foreach (string name in openFileDialog.FileNames)
                 {
                     using (StreamReader reader = File.OpenText(name))
@@ -104,6 +98,7 @@ namespace FootballStats
                     existChanges = true;
                     addGameWindow.GameNamesBox.Items.Add(name + " PIEVIENOTS");
                 }
+
                 if (existChanges)
                 {
                     dbContext.SaveChanges();

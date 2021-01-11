@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace FootballStats.GridModels
 {
@@ -7,12 +8,15 @@ namespace FootballStats.GridModels
             public string Team { get; set; }
 
             public double AverageGoals { get; set; }
-            public int MostGoals { get; set; }
-
             public double AverageConcessions { get; set; }
-            public int MostConcessions { get; set; }
+
+            public int PenaltyGoals { get; set; }
+            public int RegularGoals { get; set; }
 
             public double AverageSwaps { get; set; }
             public double AveragePenalties { get; set; }
+
+            public string LongestGame { get; set; }
+            public int MostGoalsInAGame { get; set; }
         }
 }

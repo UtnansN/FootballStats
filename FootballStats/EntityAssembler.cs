@@ -1,5 +1,6 @@
 ﻿using FootballStats.Entities;
 using FootballStats.Exceptions;
+using FootballStats.Mappers;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -79,31 +80,7 @@ namespace FootballStats
                 List<JToken> playerTokens = teamToken["Speletaji"]["Speletajs"].Children().ToList();
                 foreach (var token in playerTokens)
                 {
-                    PlayerRole role;
-                    switch ((string)token["Loma"])
-                    {
-                        case "V":
-                            role = PlayerRole.Goalkeeper;
-                            break;
-                        case "U":
-                            role = PlayerRole.Attacker;
-                            break;
-                        case "A":
-                            role = PlayerRole.Defender;
-                            break;
-                        default:
-                            throw new InvalidDataException();
-                    }
-
-                    Player player = new Player
-                    {
-                        Role = role,
-                        Number = (int)token["Nr"],
-                        Name = (string)token["Vards"],
-                        Surname = (string)token["Uzvards"]
-                    };
-
-                    team.Players.Add(player);
+                    team.Players.Add(PlayerMapper.MapToEntity(token));
                 }
                 dbContext.Teams.Add(team);
             }
@@ -142,14 +119,12 @@ namespace FootballStats
             {
                 foreach (var token in GetTokenEnumerable(swapToken["Maina"]))
                 {
-                    Swap swap = new Swap
+                    teamPlay.Swaps.Add(new Swap
                     {
                         Time = ExtractTime((string)token["Laiks"]),
                         Player = GetPlayerByNumber(players, (int)token["Nr1"]),
                         SwapTo = GetPlayerByNumber(players, (int)token["Nr2"])
-                    };
-
-                    teamPlay.Swaps.Add(swap);
+                    });
                 }
             }
 
@@ -178,7 +153,6 @@ namespace FootballStats
                             goal.Assists.Add(assist);
                         }
                     }
-
                     teamPlay.Goals.Add(goal);
                 }
             }
@@ -189,13 +163,11 @@ namespace FootballStats
             {
                 foreach (var token in GetTokenEnumerable(penaltyToken["Sods"]))
                 {
-                    Penalty penalty = new Penalty
+                    teamPlay.Penalties.Add(new Penalty
                     {
                         Time = ExtractTime((string)token["Laiks"]),
                         Player = GetPlayerByNumber(players, (int)token["Nr"])
-                    };
-
-                    teamPlay.Penalties.Add(penalty);
+                    });
                 }
             }
         }
