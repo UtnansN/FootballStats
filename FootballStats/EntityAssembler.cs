@@ -67,7 +67,13 @@ namespace FootballStats
         {
             string teamName = (string)teamToken["Nosaukums"];
 
-            Team team = dbContext.Teams.Local.Where(t => t.Name == (string)teamToken["Nosaukums"]).FirstOrDefault();
+            
+            Team team = dbContext.Teams.Local
+                .Where(t => t.Name == (string)teamToken["Nosaukums"])
+                .FirstOrDefault();
+
+            Dictionary<int, Player> playersInCurrent = new Dictionary<int, Player>();
+            List<JToken> playerTokens = teamToken["Speletaji"]["Speletajs"].Children().ToList();
             if (team == null)
             {
                 // Create new team entry
@@ -77,16 +83,35 @@ namespace FootballStats
                 };
 
                 // Add players to team
-                List<JToken> playerTokens = teamToken["Speletaji"]["Speletajs"].Children().ToList();
+                
                 foreach (var token in playerTokens)
                 {
-                    team.Players.Add(PlayerMapper.MapToEntity(token));
+                    Player curr = PlayerMapper.MapToEntity(token);
+
+                    team.Players.Add(curr);
+                    playersInCurrent.Add(curr.Number, curr);
                 }
                 dbContext.Teams.Add(team);
             }
             else
             {
-                // TODO: Add players if there is a difference between lists?
+                // Add players to team if there is a difference between lists
+                List<Player> allPlayers = team.Players.ToList();
+                foreach (var token in playerTokens)
+                {
+                    Player curr = PlayerMapper.MapToEntity(token);
+                    Player existing = GetPlayerInList(allPlayers, curr);
+
+                    if (existing != null)
+                    {
+                        curr = existing;
+                    }
+                    else
+                    {
+                        team.Players.Add(curr);
+                    }
+                    playersInCurrent.Add(curr.Number, curr);
+                }
             }
 
             Matchup teamPlay = new Matchup
@@ -97,11 +122,11 @@ namespace FootballStats
             dbContext.TeamPlays.Add(teamPlay);
 
             // Initial players considered as swaps from themselves at 00:00
-            ICollection<Player> players = team.Players;
             List<JToken> basePlayerTokens = teamToken["Pamatsastavs"]["Speletajs"].Children().ToList();
             foreach (var token in basePlayerTokens)
             {
-                Player player = GetPlayerByNumber(players, (int)token["Nr"]);
+                //Player player = GetPlayerByNumber(players, (int)token["Nr"]);
+                Player player = playersInCurrent[(int)token["Nr"]];
 
                 Swap swap = new Swap
                 {
@@ -122,8 +147,8 @@ namespace FootballStats
                     teamPlay.Swaps.Add(new Swap
                     {
                         Time = ExtractTime((string)token["Laiks"]),
-                        Player = GetPlayerByNumber(players, (int)token["Nr1"]),
-                        SwapTo = GetPlayerByNumber(players, (int)token["Nr2"])
+                        Player = playersInCurrent[(int)token["Nr1"]],
+                        SwapTo = playersInCurrent[(int)token["Nr2"]]
                     });
                 }
             }
@@ -137,7 +162,7 @@ namespace FootballStats
                     Goal goal = new Goal
                     {
                         Time = ExtractTime((string)token["Laiks"]),
-                        Player = GetPlayerByNumber(players, (int)token["Nr"]),
+                        Player = playersInCurrent[(int)token["Nr"]],
                         Type = (string)token["Sitiens"] == "N" ? KickType.Regular : KickType.Penalty
                     };
 
@@ -147,7 +172,7 @@ namespace FootballStats
                         {
                             Assist assist = new Assist
                             {
-                                Player = GetPlayerByNumber(players, (int)assistToken["Nr"])
+                                Player = playersInCurrent[(int)assistToken["Nr"]]
                             };
 
                             goal.Assists.Add(assist);
@@ -166,10 +191,19 @@ namespace FootballStats
                     teamPlay.Penalties.Add(new Penalty
                     {
                         Time = ExtractTime((string)token["Laiks"]),
-                        Player = GetPlayerByNumber(players, (int)token["Nr"])
+                        Player = playersInCurrent[(int)token["Nr"]]
                     });
                 }
             }
+        }
+
+        private Player GetPlayerInList(List<Player> playerList, Player player)
+        {
+            return playerList.Where(p => p.Name == player.Name && 
+            p.Surname == player.Surname && 
+            p.Number == player.Number &&
+            p.Role == player.Role)
+            .FirstOrDefault();
         }
 
         private JudgeGame CreateJudgeEntry(JToken token, JudgeType type)
@@ -193,11 +227,6 @@ namespace FootballStats
                 Judge = judge,
                 Type = type
             };
-        }
-
-        private Player GetPlayerByNumber(ICollection<Player> players, int num)
-        {
-            return players.Where(p => p.Number == num).First();
         }
 
         private bool ExistValidOptionalFields(JToken baseToken, string nextName)

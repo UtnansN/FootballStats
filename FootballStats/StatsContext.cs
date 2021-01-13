@@ -25,9 +25,7 @@ namespace FootballStats
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Composite keys for some many-to-many linking tables
-            // TeamPlay has its own ID despite it being an many-to-many table due to having a couple of other tables linked to it.
-            modelBuilder.Entity<Assist>().HasKey(o => new { o.GoalId, o.PlayerId });
+            //modelBuilder.Entity<Assist>().HasKey(o => new { o.GoalId, o.PlayerId });
             modelBuilder.Entity<JudgeGame>().HasKey(o => new { o.JudgeId, o.GameId });
 
             // Indices to speed up lookup by specific columns

@@ -8,6 +8,8 @@ namespace FootballStats.Entities
 {
     public class Assist
     {
+        public int AssistId { get; set; }
+
         public int GoalId { get; set; }
         public virtual Goal Goal { get; set; }
 
