@@ -25,7 +25,6 @@ namespace FootballStats
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Assist>().HasKey(o => new { o.GoalId, o.PlayerId });
             modelBuilder.Entity<JudgeGame>().HasKey(o => new { o.JudgeId, o.GameId });
 
             // Indices to speed up lookup by specific columns
@@ -38,6 +37,23 @@ namespace FootballStats
             optionsBuilder.UseSqlite("Data Source=StatsDatabase.db");
             optionsBuilder.UseLazyLoadingProxies();
             base.OnConfiguring(optionsBuilder);
+        }
+
+        public void DeleteAllData()
+        {
+            // Apparently there is no good way to wipe the database. Could do this with reflection?
+            Games.RemoveRange(Games);
+            Judges.RemoveRange(Judges);
+            JudgeGames.RemoveRange(JudgeGames);
+            Goals.RemoveRange(Goals);
+            Penalties.RemoveRange(Penalties);
+            Players.RemoveRange(Players);
+            Swaps.RemoveRange(Swaps);
+            Teams.RemoveRange(Teams);
+            TeamPlays.RemoveRange(TeamPlays);
+            Assists.RemoveRange(Assists);
+
+            SaveChanges();
         }
 
     }

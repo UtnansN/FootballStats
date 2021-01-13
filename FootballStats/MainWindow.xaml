@@ -99,6 +99,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
+        <Button Content="Dzēst visus datus" HorizontalAlignment="Left" Margin="135,65,0,0" VerticalAlignment="Top" Width="110" Height="26" FontWeight="Bold" Click="DeleteButton_Click"/>
 
     </Grid>
 </Window>

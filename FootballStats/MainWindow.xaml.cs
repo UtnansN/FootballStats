@@ -6,6 +6,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -81,7 +82,7 @@ namespace FootballStats
 
                 foreach (string name in openFileDialog.FileNames)
                 {
-                    using (StreamReader reader = File.OpenText(name))
+                    using (StreamReader reader = new StreamReader(name, Encoding.UTF8))
                     {
                         JObject obj = (JObject)JToken.ReadFrom(new JsonTextReader(reader))["Spele"];
                         try
@@ -115,6 +116,12 @@ namespace FootballStats
 
         protected virtual void OnDatabaseChange(EventArgs e)
         {
+            DatabaseChange?.Invoke(this, e);
+        }
+
+        private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            dbContext.DeleteAllData();
             DatabaseChange?.Invoke(this, e);
         }
     }
